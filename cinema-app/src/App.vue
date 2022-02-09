@@ -1,18 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
+    <MoviesList :list="moviesList" />
   </div>
 </template>
 
 <script>
-import mapActions from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import MoviesList from "@/components/MoviesList";
 
 export default {
-  name: "App",
-  components: {},
-  mounted() {
-    this.fetchMovies();
+  name: "app",
+  components: {
+    MoviesList,
   },
+  computed: {
+    ...mapGetters("movies", ["moviesList"]),
+  },
+
   methods: {
     ...mapActions("movies", ["fetchMovies"]),
   },
@@ -21,11 +25,8 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

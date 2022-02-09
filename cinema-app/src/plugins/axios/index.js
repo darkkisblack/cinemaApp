@@ -1,10 +1,10 @@
 import axios from "axios";
-import interceptor from "./interceptor";
+import interceptors from "./interceptors";
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
 });
 
-interceptor(instance);
+interceptors(instance);
 
 export default instance;

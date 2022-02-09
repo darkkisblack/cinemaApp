@@ -1,7 +1,6 @@
-import IDs from "@/store/mock/imdb_250";
-
+import IDs from "@/store/mock/imdb_top250";
 import axios from "@/plugins/axios";
-import mutations from "../mutations";
+import mutations from "@/store/mutations";
 
 function serializeResponse(movies) {
   return movies.reduce((acc, movie) => {
@@ -21,6 +20,7 @@ const moviesStore = {
     movies: {},
   },
   getters: {
+    moviesList: ({ movies }) => movies,
     slicedIDs:
       ({ top250IDs }) =>
       (from, to) =>
@@ -34,6 +34,12 @@ const moviesStore = {
     },
   },
   actions: {
+    initMoviesStore: {
+      handler({ dispatch }) {
+        dispatch("fetchMovies");
+      },
+      root: true,
+    },
     async fetchMovies({ getters, commit }) {
       try {
         const { currentPage, moviesPerPage, slicedIDs } = getters;
@@ -41,12 +47,10 @@ const moviesStore = {
         const to = currentPage * moviesPerPage;
         const moviesToFetch = slicedIDs(from, to);
 
-        const request = moviesToFetch.map((id) => axios.get(`/?i=${id}`));
-        const response = await Promise.all(request);
+        const requests = moviesToFetch.map((id) => axios.get(`/?i=${id}`));
+        const response = await Promise.all(requests);
         const movies = serializeResponse(response);
-        commit(movies, MOVIES);
-        // tt0111161
-        console.log(movies);
+        commit(MOVIES, movies);
       } catch (err) {
         console.log(err);
       }
