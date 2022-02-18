@@ -1,6 +1,6 @@
 <template>
   <BContainer>
-    <h3 class="list-title">{{listTitle}}</h3>
+    <h3 class="list-title">{{ listTitle }}</h3>
     <BRow>
       <template v-if="isExist">
         <BCol cols="3" v-for="(movie, key) in list" :key="key"
@@ -36,11 +36,13 @@ export default {
       return Boolean(Object.keys(this.list).length);
     },
     listTitle() {
-      return this.isSearch ? "Результаты поиска" : "IMDB Top 250"
-    }
+      return this.isSearch ? "Результаты поиска" : "IMDB Top 250";
+    },
   },
   methods: {
     ...mapActions("movies", ["removeMovie"]),
+    ...mapActions(["showNotify"]),
+
     onMouseOver(poster) {
       this.$emit("changePoster", poster);
     },
@@ -50,6 +52,11 @@ export default {
       );
       if (isConfirmed) {
         this.removeMovie(id);
+        this.showNotify({
+          msg: "Фильм удален",
+          variant: "success",
+          title: "Успешно",
+        });
       }
     },
   },
